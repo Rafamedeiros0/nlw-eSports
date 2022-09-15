@@ -1,17 +1,24 @@
 import express from "express"
+import { PrismaClient } from "@prisma/client"
 
 const app = express()
+const prisma = new PrismaClient({
+  log: ['query']
+})
 
-// HTTP methods / API RESTful / HTTP Codes
 
-/**
- * Query: localhost:3333/ads?page=2 (persistencia e para coisas não sensiveis)
- * Route: localhost:3333/ads/5  (acessar o anuncio com identificador 5)
- * Body: quando vamos enviar varias informacoes em uma unica requisição (fica escondido na requisição)
- */
+app.get('/games', async (request, response) => {
+  const games = await prisma.game.findMany({
+    include: {
+      _count: {
+        select: {
+          ads: true,
+        }
+      }
+    }
+  })
 
-app.get('/games', (request, response) => {
-  return response.json([])
+  return response.json(games)
 })
 
 app.post('/ads', (request, response) => {
@@ -35,3 +42,12 @@ app.get('/ads/:id/discord', (request, response) => {
 })
 
 app.listen(3333)
+
+
+// HTTP methods / API RESTful / HTTP Codes
+
+/**
+ * Query: localhost:3333/ads?page=2 (persistencia e para coisas não sensiveis)
+ * Route: localhost:3333/ads/5  (acessar o anuncio com identificador 5)
+ * Body: quando vamos enviar varias informacoes em uma unica requisição (fica escondido na requisição)
+ */
