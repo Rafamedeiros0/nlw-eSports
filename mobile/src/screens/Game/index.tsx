@@ -59,7 +59,7 @@ export function Game() {
 
         <Heading
           title={game.title}
-          subtitle='Conecte-se e comece a jogar'
+          subtitle='Conecte-se e comece a jogar!'
         />
 
         <FlatList
